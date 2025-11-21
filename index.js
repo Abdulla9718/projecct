@@ -1,43 +1,28 @@
+const dayEl = document.getElementById("day");
+const hourEl = document.getElementById("hour");
+const minuteEl = document.getElementById("minute");
+const secondEl = document.getElementById("second");
 
-const startEl = document.getElementById("start");
-const stopEl = document.getElementById("stop");
-const resetEl = document.getElementById("reset");
-const timerEl = document.getElementById("timer");
+const newYearTime = new Date("Jan 1, 2026 00:00:00").getTime();
 
-let interval;
-let timeLeft = 1500;
+updateCountdown();
 
-function updateTimer() {
-  let minutes = Math.floor(timeLeft / 60);
-  let seconds = timeLeft % 60;
-  let formattedTime = `${minutes.toString().padStart(2, "0")}:${seconds
-    .toString()
-    .padStart(2, "0")}`;
+function updateCountdown() {
+  const now = new Date().getTime();
+  const gap = newYearTime - now;
 
-  timerEl.innerHTML = formattedTime;
+  const second = 1000;
+  const minute = second * 60;
+  const hour = minute * 60;
+  const day = hour * 24;
+
+  const d = Math.floor(gap / day);
+  const h = Math.floor((gap % day) / hour);
+  const m = Math.floor((gap % hour) / minute);
+  const s = Math.floor((gap % minute) / second);
+  dayEl.innerText = d;
+  hourEl.innerText = h;
+  minuteEl.innerText = m;
+  secondEl.innerText = s;
+  setTimeout(updateCountdown, 1000)
 }
-
-function startTimer() {
-  interval = setInterval(() => {
-    timeLeft--;
-    updateTimer();
-    if (timeLeft === 0) {
-      clearInterval(interval);
-      alert("Time's up!");
-      timeLeft = 1500;
-      updateTimer();
-    }
-  }, 1000);
-}
-function stopTimer() {
-  clearInterval(interval);
-}
-function resetTimer() {
-  clearInterval(interval);
-  timeLeft = 1500;
-  updateTimer();
-}
-
-startEl.addEventListener("click", startTimer);
-stopEl.addEventListener("click", stopTimer);
-resetEl.addEventListener("click", resetTimer);
